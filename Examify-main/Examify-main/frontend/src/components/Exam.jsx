@@ -787,120 +787,62 @@ const Exam = () => {
   if (role === "student" && !cameraPermissionGranted) {
     return (
       <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 9999,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f2a4a 100%)",
-          fontFamily: "'Inter', 'Segoe UI', sans-serif",
-        }}
+        className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950 font-sans"
       >
         {/* Ambient glow effects */}
-        <div style={{
-          position: "absolute", top: "20%", left: "30%",
-          width: 320, height: 320, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
-        <div style={{
-          position: "absolute", bottom: "20%", right: "25%",
-          width: 260, height: 260, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
+        <div className="absolute top-[20%] left-[30%] w-[320px] h-[320px] rounded-full bg-indigo-500/15 blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-[20%] right-[25%] w-[260px] h-[260px] rounded-full bg-cyan-500/15 blur-[100px] pointer-events-none" />
 
-        <div style={{
-          background: "rgba(255,255,255,0.04)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          borderRadius: 24,
-          maxWidth: 460,
-          width: "calc(100% - 32px)",
-          overflow: "hidden",
-          boxShadow: "0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)",
-        }}>
+        <div className="glass-strong rounded-3xl max-w-md w-[calc(100%-32px)] overflow-hidden shadow-2xl relative z-10 border-slate-700/50">
 
           {/* Header */}
-          <div style={{
-            background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #7c3aed 100%)",
-            padding: "36px 32px 28px",
-            textAlign: "center",
-            position: "relative",
-            overflow: "hidden",
-          }}>
-            <div style={{
-              position: "absolute", inset: 0,
-              background: "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%)",
-            }} />
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-center relative overflow-hidden border-b border-white/5">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            
             {/* Camera icon */}
-            <div style={{
-              width: 72, height: 72,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.15)",
-              backdropFilter: "blur(10px)",
-              border: "2px solid rgba(255,255,255,0.25)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              margin: "0 auto 16px",
-              position: "relative",
-            }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={1.5}>
+            <div className="w-20 h-20 rounded-full glass border-indigo-500/30 flex items-center justify-center mx-auto mb-4 relative z-10 shadow-glow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-cyan-400" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
               </svg>
             </div>
-            <h2 style={{ color: "#fff", fontSize: 22, fontWeight: 700, margin: "0 0 6px", position: "relative" }}>
+            <h2 className="text-white text-2xl font-bold mb-2 relative z-10">
               Camera Access Required
             </h2>
-            <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 14, margin: 0, position: "relative" }}>
+            <p className="text-slate-400 text-sm m-0 relative z-10">
               Your camera must be enabled to begin this proctored exam.
             </p>
           </div>
 
           {/* Body */}
-          <div style={{ padding: "28px 32px 32px" }}>
+          <div className="p-8">
 
             {/* Info bullets */}
-            <div style={{ marginBottom: 24 }}>
+            <div className="space-y-3 mb-8">
               {[
                 { icon: "🎥", color: "#3b82f6", text: "Your camera is used only for live proctoring during this exam." },
                 { icon: "📸", color: "#8b5cf6", text: "Periodic screenshots will be reviewed by your instructor." },
                 { icon: "🚫", color: "#ef4444", text: "You cannot start the exam without granting camera access." },
               ].map(({ icon, color, text }, i) => (
-                <div key={i} style={{
-                  display: "flex", alignItems: "flex-start", gap: 12,
-                  padding: "10px 14px", marginBottom: 8,
-                  background: "rgba(255,255,255,0.04)",
-                  border: `1px solid rgba(255,255,255,0.07)`,
-                  borderRadius: 12,
-                }}>
-                  <span style={{ fontSize: 18, lineHeight: 1.4 }}>{icon}</span>
-                  <p style={{ margin: 0, fontSize: 13.5, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>{text}</p>
+                <div key={i} className="flex items-start gap-3 p-3 bg-slate-900/50 border border-white/5 rounded-xl">
+                  <span className="text-lg leading-snug">{icon}</span>
+                  <p className="m-0 text-sm text-slate-300 leading-relaxed">{text}</p>
                 </div>
               ))}
             </div>
 
             {/* Error state */}
             {cameraPermissionError && (
-              <div style={{
-                marginBottom: 20,
-                background: "rgba(239,68,68,0.12)",
-                border: "1px solid rgba(239,68,68,0.3)",
-                borderRadius: 12,
-                padding: "14px 16px",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#f87171" strokeWidth={2}>
+              <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-red-400" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                   </svg>
-                  <span style={{ color: "#f87171", fontSize: 13, fontWeight: 600 }}>Camera Permission Denied</span>
+                  <span className="text-red-400 text-sm font-bold">Camera Permission Denied</span>
                 </div>
-                <p style={{ margin: "0 0 8px", fontSize: 13, color: "rgba(255,255,255,0.7)" }}>
+                <p className="m-0 mb-2 text-sm text-red-200/80">
                   {cameraPermissionError}
                 </p>
-                <p style={{ margin: 0, fontSize: 12, color: "rgba(248,113,113,0.8)" }}>
+                <p className="m-0 text-xs text-red-300/80">
                   💡 <strong>Fix:</strong> Click the camera icon in your browser's address bar → select <strong>"Allow"</strong> → then click Retry below.
                 </p>
               </div>
@@ -911,33 +853,14 @@ const Exam = () => {
               id="camera-permission-btn"
               onClick={requestCameraPermission}
               disabled={requestingCamera}
-              style={{
-                width: "100%",
-                padding: "14px 24px",
-                borderRadius: 14,
-                border: "none",
-                cursor: requestingCamera ? "not-allowed" : "pointer",
-                fontWeight: 700,
-                fontSize: 15,
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 10,
-                transition: "all 0.2s ease",
-                background: requestingCamera
-                  ? "rgba(99,102,241,0.5)"
-                  : cameraPermissionError
-                  ? "linear-gradient(135deg, #dc2626, #b91c1c)"
-                  : "linear-gradient(135deg, #2563eb, #7c3aed)",
-                boxShadow: requestingCamera ? "none" : "0 4px 20px rgba(99,102,241,0.4)",
-              }}
+              className={`w-full py-3.5 px-6 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2.5 transition-all
+                ${requestingCamera ? "bg-indigo-500/50 cursor-not-allowed" : cameraPermissionError ? "bg-gradient-to-r from-red-600 to-red-700 shadow-[0_4px_20px_rgba(220,38,38,0.3)] hover:shadow-[0_4px_25px_rgba(220,38,38,0.4)] hover:-translate-y-0.5" : "btn-primary"}`}
             >
               {requestingCamera ? (
                 <>
-                  <svg style={{ animation: "spin 1s linear infinite", width: 20, height: 20 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  <svg className="animate-spin w-5 h-5 text-white/70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                   </svg>
                   Requesting Camera Access...
                 </>
@@ -958,14 +881,11 @@ const Exam = () => {
               )}
             </button>
 
-            <p style={{ textAlign: "center", margin: "14px 0 0", fontSize: 12, color: "rgba(255,255,255,0.35)" }}>
+            <p className="text-center m-0 mt-4 text-xs text-slate-500">
               🔒 Camera access is mandatory and cannot be skipped.
             </p>
           </div>
         </div>
-
-        {/* Spin keyframe */}
-        <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
@@ -973,9 +893,9 @@ const Exam = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-8">
-        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading exam...</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="loading-spinner mb-6"></div>
+        <p className="text-slate-400 text-lg font-medium animate-pulse">Loading exam securely...</p>
         <ToastContainer />
       </div>
     );
@@ -983,94 +903,109 @@ const Exam = () => {
 
   if (error) {
     return (
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4">
-        <p>{error}</p>
-        <p className="mt-2">Redirecting to your results page...</p>
+      <div className="max-w-2xl mx-auto mt-12 bg-red-500/10 border border-red-500/30 text-red-400 px-6 py-5 rounded-xl shadow-lg flex items-start gap-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="shrink-0 mt-0.5">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <div>
+          <p className="font-bold text-lg mb-1">{error}</p>
+          <p className="text-red-300/80 text-sm">Redirecting to your results page...</p>
+        </div>
         <ToastContainer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-[55vh]">
-      <ToastContainer limit={1} />
+    <div className="max-w-4xl mx-auto min-h-[70vh] pb-12 relative">
+      <ToastContainer limit={1} toastClassName="!bg-slate-900 !text-white !rounded-xl !border !border-white/10" />
 
       {/* Camera Proctoring Section */}
       {role === "student" && (
-        <div className="fixed top-4 right-4 z-50 bg-white rounded-lg shadow-lg p-4 border">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-bold text-gray-800">
-              Proctoring Camera
+        <div className="fixed top-24 right-6 z-50 glass-strong rounded-xl shadow-2xl p-3 w-48 border border-indigo-500/20 animate-fade-in-up">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+              </svg>
+              Proctoring
             </h3>
-            <div
-              className={`w-3 h-3 rounded-full ${
-                cameraActive ? "bg-green-500" : "bg-red-500"
-              }`}
-            ></div>
+            <div className="relative flex h-2.5 w-2.5">
+              {cameraActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>}
+              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${cameraActive ? "bg-emerald-500" : "bg-red-500"}`}></span>
+            </div>
           </div>
 
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
-            className="w-32 h-24 object-cover rounded border"
-            style={{ display: cameraActive ? "block" : "none" }}
-          />
+          <div className="relative rounded-lg overflow-hidden border border-slate-700/50 bg-slate-900 aspect-[4/3]">
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+              style={{ display: cameraActive ? "block" : "none" }}
+            />
+            <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] pointer-events-none" />
+          </div>
 
           <canvas ref={canvasRef} style={{ display: "none" }} />
 
-          <div className="mt-2 text-xs">
-            <div
-              className={`flex items-center ${
-                faceDetected ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              <div
-                className={`w-2 h-2 rounded-full mr-1 ${
-                  faceDetected ? "bg-green-500" : "bg-red-500"
-                }`}
-              ></div>
+          <div className="mt-3 text-[10px] font-semibold uppercase tracking-wider px-1">
+            <div className={`flex items-center gap-1.5 ${faceDetected ? "text-emerald-400" : "text-red-400"}`}>
+              <div className={`w-1.5 h-1.5 rounded-full ${faceDetected ? "bg-emerald-500" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"}`}></div>
               {faceDetected ? "Face Detected" : "No Face Detected"}
             </div>
           </div>
         </div>
       )}
 
-      <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
-        <p className="font-bold">Exam Security Notice:</p>
-        <p>
-          Copy-paste, right-click, and tab switching are disabled. You have{" "}
-          {3 - tabSwitches} tab switches remaining.
-        </p>
-        {role === "student" && (
-          <p className="mt-2 text-sm">
-            Camera proctoring is active. Please stay in front of the camera.
+      {/* Security Banner */}
+      <div className="bg-amber-500/10 border border-amber-500/30 text-amber-200 p-4 mb-6 rounded-xl flex items-start gap-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="shrink-0 mt-0.5 text-amber-400">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <div>
+          <p className="font-bold text-amber-300 mb-1">Exam Security Notice</p>
+          <p className="text-sm opacity-90">
+            Copy-paste, right-click, and tab switching are disabled. You have <strong className="text-amber-100">{3 - tabSwitches}</strong> tab switches remaining.
           </p>
-        )}
+          {role === "student" && (
+            <p className="mt-1 text-xs opacity-75">
+              Camera proctoring is active. Please stay in front of the camera.
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Time Remaining Display */}
       {role === "student" && (
         <div
-          className={`border-l-4 p-4 mb-4 ${
+          className={`glass p-5 mb-8 rounded-xl flex items-center justify-between border-l-4 shadow-lg transition-colors duration-300 ${
             timeRemaining === null
-              ? "bg-gray-100 border-gray-500 text-gray-700"
+              ? "border-slate-500 bg-slate-900/50"
               : timeRemaining <= 300
-              ? "bg-red-100 border-red-500 text-red-700"
+              ? "border-red-500 bg-red-500/10 shadow-[0_0_30px_rgba(239,68,68,0.15)]"
               : timeRemaining <= 600
-              ? "bg-orange-100 border-orange-500 text-orange-700"
-              : "bg-blue-100 border-blue-500 text-blue-700"
+              ? "border-amber-500 bg-amber-500/10"
+              : "border-cyan-500 bg-cyan-500/10"
           }`}
         >
-          <p className="font-bold">Time Remaining:</p>
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-lg ${timeRemaining !== null && timeRemaining <= 300 ? "bg-red-500/20 text-red-400" : "bg-white/5 text-slate-400"}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="font-bold text-white text-lg">Time Remaining</p>
+          </div>
+          
           {timeRemaining !== null ? (
-            <p className="text-lg font-mono">
-              {Math.floor(timeRemaining / 60)}:
+            <div className={`text-3xl font-bold font-mono tracking-wider ${timeRemaining <= 300 ? "text-red-400 animate-pulse" : "text-cyan-400"}`}>
+              {Math.floor(timeRemaining / 60).toString().padStart(2, "0")}:
               {(timeRemaining % 60).toString().padStart(2, "0")}
-            </p>
+            </div>
           ) : (
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-slate-400 font-medium">
               {exam?.timeLimit
                 ? `Timer will start soon (${exam.timeLimit} minutes)`
                 : "No time limit set"}
@@ -1082,52 +1017,94 @@ const Exam = () => {
       {exam && (
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-6 rounded shadow-md"
+          className="space-y-6"
         >
-          <h2 className="text-xl font-bold mb-4">{exam.title}</h2>
-          {exam.questions.map((question, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 border border-gray-200 rounded"
-            >
-              <p className="font-semibold">{question.question}</p>
-              {question.options.map((option, optionIndex) => (
-                <label key={optionIndex} className="block mt-2 ml-2">
-                  <input
-                    type="radio"
-                    name={`question-${index}`}
-                    value={option}
-                    checked={answers[index] === option}
-                    onChange={() => {
-                      const newAnswers = [...answers];
-                      newAnswers[index] = option;
-                      setAnswers(newAnswers);
-                    }}
-                    className="mr-2"
-                  />
-                  <span>{option}</span>
-                </label>
-              ))}
-            </div>
-          ))}
-          {role === "student" ? (
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded transition"
-              disabled={submitted || isAutoSubmitting.current}
-            >
-              {submitted || isAutoSubmitting.current
-                ? "Submitting..."
-                : "Submit Exam"}
-            </button>
-          ) : (
-            <button
-              className="bg-red-500 text-white p-2 rounded transition"
-              disabled
-            >
-              Author can't Attempt
-            </button>
-          )}
+          <div className="mb-8">
+            <h2 className="text-3xl font-extrabold text-white tracking-tight">{exam.title}</h2>
+            <div className="h-1 w-20 bg-gradient-to-r from-indigo-500 to-cyan-500 mt-4 rounded-full"></div>
+          </div>
+          
+          <div className="space-y-6">
+            {exam.questions.map((question, index) => (
+              <div
+                key={index}
+                className="card-glass p-6 md:p-8"
+              >
+                <div className="flex items-start gap-4 mb-6">
+                  <span className="shrink-0 w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 flex items-center justify-center font-bold">
+                    {index + 1}
+                  </span>
+                  <p className="font-medium text-lg text-white pt-1">{question.question}</p>
+                </div>
+                
+                <div className="space-y-3 pl-12">
+                  {question.options.map((option, optionIndex) => {
+                    const isSelected = answers[index] === option;
+                    return (
+                      <label 
+                        key={optionIndex} 
+                        className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-200 border ${
+                          isSelected 
+                            ? "bg-indigo-500/20 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.15)]" 
+                            : "bg-slate-900/50 border-white/5 hover:border-white/10 hover:bg-slate-800/50"
+                        }`}
+                      >
+                        <div className={`relative flex items-center justify-center w-5 h-5 rounded-full border-2 transition-colors ${
+                          isSelected ? "border-indigo-400" : "border-slate-600"
+                        }`}>
+                          {isSelected && <div className="w-2.5 h-2.5 bg-indigo-400 rounded-full" />}
+                        </div>
+                        <input
+                          type="radio"
+                          name={`question-${index}`}
+                          value={option}
+                          checked={isSelected}
+                          onChange={() => {
+                            const newAnswers = [...answers];
+                            newAnswers[index] = option;
+                            setAnswers(newAnswers);
+                          }}
+                          className="sr-only"
+                        />
+                        <span className={`text-sm ${isSelected ? "text-indigo-100 font-medium" : "text-slate-300"}`}>{option}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="pt-8 sticky bottom-6 z-40">
+            {role === "student" ? (
+              <button
+                type="submit"
+                className="btn-primary w-full py-4 text-lg shadow-[0_10px_40px_rgba(124,58,237,0.4)] flex items-center justify-center gap-2 group"
+                disabled={submitted || isAutoSubmitting.current}
+              >
+                {submitted || isAutoSubmitting.current ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Submitting Exam securely...
+                  </>
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Submit Exam Final
+                  </>
+                )}
+              </button>
+            ) : (
+              <div className="bg-slate-800/80 backdrop-blur border border-slate-700 text-slate-400 p-4 rounded-xl text-center flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Authors cannot submit their own exams (Preview Mode)
+              </div>
+            )}
+          </div>
         </form>
       )}
     </div>
