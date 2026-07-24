@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, User, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,121 +23,225 @@ const Navbar = () => {
         return null;
     }
 
-    const isActive = (path) => {
-        return location.pathname === path ? 'text-indigo-200 border-b-2 border-indigo-200' : 'text-white hover:text-indigo-200';
-    };
+    const isActive = (path) => location.pathname === path;
 
     return (
-        <nav className="bg-gradient-to-r from-indigo-700 to-indigo-600 shadow-lg">
-            <div className="container mx-auto px-4 py-3">
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                        <Link to="/" className="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <nav className="sticky top-0 z-50" style={{
+            background: 'rgba(10, 14, 26, 0.8)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+        }}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center h-16">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center gap-2.5 group">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{
+                            background: 'var(--gradient-primary)',
+                            boxShadow: '0 0 20px rgba(124, 58, 237, 0.3)',
+                        }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span className="ml-2 text-xl font-bold text-white">Examify</span>
-                        </Link>
-                    </div>
+                        </div>
+                        <span className="text-xl font-bold gradient-text">Examify</span>
+                    </Link>
 
-                    <div className="hidden md:flex items-center space-x-8">
-                        <Link to="/dashboard" className={`${isActive('/dashboard')} font-medium transition duration-150 ease-in-out pb-1`}>
-                            Dashboard
-                        </Link>
-                        
-                        {role === 'examiner' && (
-                            <Link to="/create-exam" className={`${isActive('/create-exam')} font-medium transition duration-150 ease-in-out pb-1`}>
-                                Create Exam
-                            </Link>
-                        )}
-                        
-                        {role !== 'examiner' && (
-                            <Link to="/results" className={`${isActive('/results')} font-medium transition duration-150 ease-in-out pb-1`}>
-                                Results
-                            </Link>
-                        )}
-                        
-                        <div className="relative">
-                            <button 
-                                className="flex items-center text-white focus:outline-none"
-                                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    {/* Desktop Nav Links */}
+                    <div className="hidden md:flex items-center gap-1">
+                        {[
+                            { path: '/dashboard', label: 'Dashboard', show: true },
+                            { path: '/create-exam', label: 'Create Exam', show: role === 'examiner' },
+                            { path: '/results', label: 'Results', show: role !== 'examiner' },
+                        ].filter(item => item.show).map(item => (
+                            <Link
+                                key={item.path}
+                                to={item.path}
+                                className="relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                                style={{
+                                    color: isActive(item.path) ? '#e2e8f0' : '#94a3b8',
+                                    background: isActive(item.path) ? 'rgba(124, 58, 237, 0.15)' : 'transparent',
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (!isActive(item.path)) {
+                                        e.currentTarget.style.color = '#cbd5e1';
+                                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!isActive(item.path)) {
+                                        e.currentTarget.style.color = '#94a3b8';
+                                        e.currentTarget.style.background = 'transparent';
+                                    }
+                                }}
                             >
-                                <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-semibold">
+                                {isActive(item.path) && (
+                                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full" style={{
+                                        background: 'var(--gradient-primary)',
+                                    }} />
+                                )}
+                                {item.label}
+                            </Link>
+                        ))}
+                        
+                        {/* Profile Dropdown */}
+                        <div className="relative ml-3">
+                            <button 
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-200"
+                                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                style={{
+                                    background: isProfileOpen ? 'rgba(255, 255, 255, 0.06)' : 'transparent',
+                                    border: '1px solid transparent',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!isProfileOpen) e.currentTarget.style.background = 'transparent';
+                                }}
+                            >
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white" style={{
+                                    background: 'var(--gradient-primary)',
+                                }}>
                                     {username.charAt(0).toUpperCase()}
                                 </div>
-                                <span className="ml-2">{username}</span>
-                                <ChevronDown size={16} className="ml-1" />
+                                <span className="text-sm font-medium" style={{ color: '#cbd5e1' }}>{username}</span>
+                                <ChevronDown size={14} style={{ color: '#64748b', transition: 'transform 0.2s', transform: isProfileOpen ? 'rotate(180deg)' : 'rotate(0)' }} />
                             </button>
                             
-                            {isProfileOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                    <div className="px-4 py-2 text-sm text-gray-700 border-b">
-                                        <div className="font-medium">Signed in as</div>
-                                        <div className="font-bold">{username}</div>
-                                    </div>
-                                    <button 
-                                        onClick={handleLogout}
-                                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                            <AnimatePresence>
+                                {isProfileOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                                        transition={{ duration: 0.15 }}
+                                        className="absolute right-0 mt-2 w-56 py-2 rounded-xl overflow-hidden"
+                                        style={{
+                                            background: 'rgba(15, 23, 42, 0.95)',
+                                            backdropFilter: 'blur(20px)',
+                                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                                            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+                                        }}
                                     >
-                                        <LogOut size={16} className="mr-2" />
-                                        Sign out
-                                    </button>
-                                </div>
-                            )}
+                                        <div className="px-4 py-3" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                                            <p className="text-xs font-medium" style={{ color: '#64748b' }}>Signed in as</p>
+                                            <p className="text-sm font-bold" style={{ color: '#e2e8f0' }}>{username}</p>
+                                            <span className="inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded-full" style={{
+                                                background: 'rgba(124, 58, 237, 0.15)',
+                                                color: '#a78bfa',
+                                            }}>
+                                                {role}
+                                            </span>
+                                        </div>
+                                        <button 
+                                            onClick={handleLogout}
+                                            className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 transition-colors duration-150"
+                                            style={{ color: '#ef4444' }}
+                                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)'}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                                        >
+                                            <LogOut size={15} />
+                                            Sign out
+                                        </button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
 
-                    <div className="md:hidden flex items-center">
-                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white focus:outline-none">
-                            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    {/* Mobile Menu Button */}
+                    <div className="md:hidden">
+                        <button 
+                            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+                            className="p-2 rounded-lg transition-colors"
+                            style={{
+                                color: '#94a3b8',
+                                background: isMenuOpen ? 'rgba(255,255,255,0.06)' : 'transparent',
+                            }}
+                        >
+                            {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
                         </button>
                     </div>
                 </div>
                 
-                {isMenuOpen && (
-                    <div className="md:hidden mt-3 py-3 border-t border-indigo-500">
-                        <Link 
-                            to="/dashboard" 
-                            className="block py-2 text-white hover:bg-indigo-600 px-3 rounded"
-                            onClick={() => setIsMenuOpen(false)}
+                {/* Mobile Menu */}
+                <AnimatePresence>
+                    {isMenuOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="md:hidden overflow-hidden"
+                            style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
                         >
-                            Dashboard
-                        </Link>
-                        
-                        {role === 'examiner' && (
-                            <Link 
-                                to="/create-exam" 
-                                className="block py-2 text-white hover:bg-indigo-600 px-3 rounded"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Create Exam
-                            </Link>
-                        )}
-                        
-                        {role !== 'examiner' && (
-                            <Link 
-                                to="/results" 
-                                className="block py-2 text-white hover:bg-indigo-600 px-3 rounded"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Results
-                            </Link>
-                        )}
-                        
-                        <div className="mt-3 pt-3 border-t border-indigo-500">
-                            <div className="px-3 py-2 text-indigo-200">
-                                <div>Signed in as <span className="font-bold">{username}</span></div>
+                            <div className="py-3 space-y-1">
+                                <Link 
+                                    to="/dashboard" 
+                                    className="block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                                    style={{
+                                        color: isActive('/dashboard') ? '#e2e8f0' : '#94a3b8',
+                                        background: isActive('/dashboard') ? 'rgba(124, 58, 237, 0.12)' : 'transparent',
+                                    }}
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Dashboard
+                                </Link>
+                                
+                                {role === 'examiner' && (
+                                    <Link 
+                                        to="/create-exam" 
+                                        className="block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                                        style={{
+                                            color: isActive('/create-exam') ? '#e2e8f0' : '#94a3b8',
+                                            background: isActive('/create-exam') ? 'rgba(124, 58, 237, 0.12)' : 'transparent',
+                                        }}
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        Create Exam
+                                    </Link>
+                                )}
+                                
+                                {role !== 'examiner' && (
+                                    <Link 
+                                        to="/results" 
+                                        className="block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                                        style={{
+                                            color: isActive('/results') ? '#e2e8f0' : '#94a3b8',
+                                            background: isActive('/results') ? 'rgba(124, 58, 237, 0.12)' : 'transparent',
+                                        }}
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        Results
+                                    </Link>
+                                )}
+                                
+                                <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                                    <div className="px-4 py-2 flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white" style={{
+                                            background: 'var(--gradient-primary)',
+                                        }}>
+                                            {username.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-semibold" style={{ color: '#e2e8f0' }}>{username}</p>
+                                            <p className="text-xs" style={{ color: '#64748b' }}>{role}</p>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        onClick={handleLogout}
+                                        className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 rounded-lg mt-1 transition-colors"
+                                        style={{ color: '#ef4444' }}
+                                    >
+                                        <LogOut size={15} />
+                                        Sign out
+                                    </button>
+                                </div>
                             </div>
-                            <button 
-                                onClick={handleLogout}
-                                className="w-full text-left px-3 py-2 text-white hover:bg-indigo-600 rounded flex items-center"
-                            >
-                                <LogOut size={16} className="mr-2" />
-                                Sign out
-                            </button>
-                        </div>
-                    </div>
-                )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </nav>
     );
