@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, Plus, Award, Eye } from "lucide-react";
+import { BookOpen, Plus, Award, Eye, Clock, FileText, ChevronRight, AlertCircle } from "lucide-react";
 import api from "../utils/api";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -57,102 +57,122 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto min-h-screen p-6">
+    <div className="max-w-6xl mx-auto min-h-screen">
+      {/* Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex justify-between items-center mb-8"
+        className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4"
       >
-        <h1 className="text-2xl font-bold text-indigo-800 flex items-center">
-          <BookOpen size={28} className="mr-2 text-indigo-600" />
-          {role === "examiner" ? "Your Created Exams" : "Available Exams"}
-        </h1>
+        <div>
+          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+            <div className="p-2 bg-indigo-500/20 rounded-lg border border-indigo-500/30">
+              <BookOpen size={28} className="text-indigo-400" />
+            </div>
+            {role === "examiner" ? "Your Created Exams" : "Available Exams"}
+          </h1>
+          <p className="text-slate-400 mt-2 ml-14">
+            {role === "examiner" ? "Manage and monitor your assessments." : "Ready to test your knowledge? Select an exam below."}
+          </p>
+        </div>
 
         {role === "examiner" && (
           <Link to="/create-exam">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-4 py-2 rounded-lg shadow-md transition flex items-center"
+              className="btn-primary flex items-center gap-2"
             >
-              <Plus size={18} className="mr-1" />
+              <Plus size={20} />
               Create New Exam
             </motion.button>
           </Link>
         )}
       </motion.div>
 
+      {/* Content Area */}
       {loading ? (
-        <div className="flex justify-center p-8">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-            className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full"
-          />
+        <div className="flex justify-center items-center h-64">
+          <div className="loading-spinner"></div>
         </div>
       ) : error ? (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-sm"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass p-6 rounded-xl bg-red-500/10 border-red-500/20 flex flex-col items-center justify-center text-center h-64"
         >
-          <p>{error}</p>
+          <AlertCircle size={48} className="text-red-400 mb-4" />
+          <p className="text-red-200 text-lg font-medium">{error}</p>
+          <button onClick={() => window.location.reload()} className="mt-4 btn-secondary text-sm px-6 py-2">
+            Try Again
+          </button>
         </motion.div>
       ) : exams.length > 0 ? (
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {exams.map((exam) => (
             <motion.div
               key={exam._id}
               variants={itemVariants}
-              whileHover={{
-                y: -5,
-                boxShadow: "0 10px 25px -5px rgba(79, 70, 229, 0.1)",
-              }}
-              className="border border-indigo-100 p-6 rounded-xl bg-white shadow hover:shadow-lg transition-all"
+              className="card-glass p-6 flex flex-col h-full group"
             >
-              <h2 className="font-semibold text-xl mb-3 text-indigo-800">
-                {exam.title}
-              </h2>
-              <div className="flex items-center mb-4 text-indigo-600">
-                <BookOpen size={16} className="mr-2" />
-                <p className="text-gray-600">
-                  {exam.questions.length} Questions
-                </p>
-                {exam.timeLimit && (
-                  <span className="ml-4 text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                    {exam.timeLimit} min
-                  </span>
-                )}
+              <div className="flex-1">
+                <div className="flex justify-between items-start mb-4">
+                  <h2 className="font-bold text-xl text-white group-hover:text-indigo-300 transition-colors line-clamp-2">
+                    {exam.title}
+                  </h2>
+                  <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center shrink-0 border border-slate-700">
+                    <FileText size={20} className="text-slate-400" />
+                  </div>
+                </div>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center text-slate-300 bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
+                    <BookOpen size={18} className="text-cyan-400 mr-3" />
+                    <span className="font-medium">{exam.questions?.length || 0}</span>
+                    <span className="ml-1 text-slate-400">Questions</span>
+                  </div>
+                  
+                  {exam.timeLimit && (
+                    <div className="flex items-center text-slate-300 bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
+                      <Clock size={18} className="text-orange-400 mr-3" />
+                      <span className="font-medium">{exam.timeLimit}</span>
+                      <span className="ml-1 text-slate-400">Minutes</span>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <Link to={`/exam/${exam._id}`}>
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white p-3 rounded-lg shadow transition flex items-center justify-center"
-                >
-                  {role === "examiner" ? "View Exam" : "Take Exam"}
-                </motion.button>
-              </Link>
-
-              {role === "examiner" && (
-                <Link to={`/proctoring/${exam._id}`}>
+              <div className="mt-auto space-y-3">
+                <Link to={`/exam/${exam._id}`} className="block">
                   <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="w-full mt-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-2 rounded-lg shadow transition flex items-center justify-center text-sm"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full btn-primary flex items-center justify-between"
                   >
-                    <Eye size={16} className="mr-1" />
-                    Proctoring Dashboard
+                    {role === "examiner" ? "Preview Exam" : "Take Exam"}
+                    <ChevronRight size={18} />
                   </motion.button>
                 </Link>
-              )}
+
+                {role === "examiner" && (
+                  <Link to={`/proctoring/${exam._id}`} className="block">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full btn-secondary flex items-center justify-center gap-2 text-sm py-2.5"
+                    >
+                      <Eye size={16} />
+                      Proctoring Dashboard
+                    </motion.button>
+                  </Link>
+                )}
+              </div>
             </motion.div>
           ))}
         </motion.div>
@@ -160,34 +180,42 @@ const Dashboard = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center p-12 bg-indigo-50 rounded-xl border border-indigo-100 shadow-sm"
+          className="card-glass p-12 text-center max-w-2xl mx-auto mt-10 relative overflow-hidden"
         >
-          <Award size={48} className="mx-auto mb-4 text-indigo-300" />
-          <p className="text-indigo-800 mb-6 text-lg">
-            {getMessageForEmptyExams()}
-          </p>
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/10 to-transparent pointer-events-none" />
+          <div className="relative z-10">
+            <div className="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-700 shadow-glow">
+              <Award size={48} className="text-indigo-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-3">All Caught Up!</h3>
+            <p className="text-slate-400 mb-8 text-lg">
+              {getMessageForEmptyExams()}
+            </p>
 
-          {role === "examiner" ? (
-            <Link to="/create-exam">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-6 py-3 rounded-lg shadow transition"
-              >
-                Create Your First Exam
-              </motion.button>
-            </Link>
-          ) : (
-            <Link to="/results">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-6 py-3 rounded-lg shadow transition"
-              >
-                View Your Results
-              </motion.button>
-            </Link>
-          )}
+            {role === "examiner" ? (
+              <Link to="/create-exam">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn-primary inline-flex items-center gap-2"
+                >
+                  <Plus size={20} />
+                  Create Your First Exam
+                </motion.button>
+              </Link>
+            ) : (
+              <Link to="/results">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn-secondary inline-flex items-center gap-2"
+                >
+                  <Award size={20} />
+                  View Your Results
+                </motion.button>
+              </Link>
+            )}
+          </div>
         </motion.div>
       )}
     </div>
