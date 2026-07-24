@@ -10,12 +10,17 @@ import Home from './components/Home'
 import ProctoringDashboard from './components/ProctoringDashboard';
 import { Footer } from './components/Footer';
 import { useAuth } from './contexts/AuthContext';
+import './App.css';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
@@ -29,7 +34,11 @@ const ExaminerRoute = ({ children }) => {
   const { isAuthenticated, user, loading } = useAuth();
 
   if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
@@ -46,48 +55,50 @@ const ExaminerRoute = ({ children }) => {
 const App = () => {
   return (
     <Router>
-      <Navbar />
-      <div className="container mx-auto p-4">
-        <Routes>
+      <div className="app-wrapper">
+        <Navbar />
+        <main className="app-content">
+          <Routes>
 
-          <Route path='/' element={<Home/>}/>
+            <Route path='/' element={<Home/>}/>
 
-          <Route path="/signup" element={<Auth />} />
+            <Route path="/signup" element={<Auth />} />
 
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
 
-          <Route path="/create-exam" element={
-            <ExaminerRoute>
-              <CreateExam />
-            </ExaminerRoute>
-          } />
+            <Route path="/create-exam" element={
+              <ExaminerRoute>
+                <CreateExam />
+              </ExaminerRoute>
+            } />
 
-          <Route path="/exam/:id" element={
-            <ProtectedRoute>
-              <Exam />
-            </ProtectedRoute>
-          } />
+            <Route path="/exam/:id" element={
+              <ProtectedRoute>
+                <Exam />
+              </ProtectedRoute>
+            } />
 
-          <Route path="/proctoring/:examId" element={
-            <ExaminerRoute>
-              <ProctoringDashboard />
-            </ExaminerRoute>
-          } />
+            <Route path="/proctoring/:examId" element={
+              <ExaminerRoute>
+                <ProctoringDashboard />
+              </ExaminerRoute>
+            } />
 
-          <Route path="/results" element={
-            <ProtectedRoute>
-              <Results />
-            </ProtectedRoute>
-          } />
+            <Route path="/results" element={
+              <ProtectedRoute>
+                <Results />
+              </ProtectedRoute>
+            } />
 
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </main>
+        <Footer/>
       </div>
-      <Footer/>
     </Router>
   );
 };
